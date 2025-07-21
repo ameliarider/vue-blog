@@ -64,6 +64,14 @@ export default {
                     console.log("posts update error", error.response);
                 });
         },
+        handleDestroyPost: function (post) {
+            axios.delete(`/posts/${post.id}.json`).then((response) => {
+                console.log("posts destroy", response);
+                var index = this.posts.indexOf(post);
+                this.posts.splice(index, 1);
+                this.handleClose();
+            });
+        },
         handleClose: function () {
             this.isPostsShowVisible = false;
         },
@@ -76,7 +84,7 @@ export default {
         <PostsNew v-on:createPost="handleCreatePost" />
         <PostsIndex v-bind:posts="posts" v-on:showPost="handleShowPost" />
         <Modal v-bind:show="isPostsShowVisible" v-on:close="handleClose">
-            <PostsShow v-bind:post="currentPost" v-on:updatePost="handleUpdatePost" />
+            <PostsShow v-bind:post="currentPost" v-on:updatePost="handleUpdatePost" v-on:destroyPost="handleDestroyPost" />
         </Modal>
     </main>
 </template>
