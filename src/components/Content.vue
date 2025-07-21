@@ -45,6 +45,25 @@ export default {
             this.currentPost = post;
             this.isPostsShowVisible = true;
         },
+        handleUpdatePost: function (id, params) {
+            console.log("handleUpdatePost", id, params);
+            axios
+                .patch(`/posts/${id}.json`, params)
+                .then((response) => {
+                    console.log("posts update", response);
+                    this.posts = this.posts.map((post) => {
+                        if (post.id === response.data.id) {
+                            return response.data;
+                        } else {
+                            return post;
+                        }
+                    });
+                    this.handleClose();
+                })
+                .catch((error) => {
+                    console.log("posts update error", error.response);
+                });
+        },
         handleClose: function () {
             this.isPostsShowVisible = false;
         },
@@ -57,7 +76,7 @@ export default {
         <PostsNew v-on:createPost="handleCreatePost" />
         <PostsIndex v-bind:posts="posts" v-on:showPost="handleShowPost" />
         <Modal v-bind:show="isPostsShowVisible" v-on:close="handleClose">
-            <PostsShow v-bind:post="currentPost" />
+            <PostsShow v-bind:post="currentPost" v-on:updatePost="handleUpdatePost" />
         </Modal>
     </main>
 </template>
